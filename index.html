@@ -10,15 +10,30 @@
             display: block;
             margin: 0 auto;
         }
+        #restartButton {
+            display: none; /* 初始隱藏按鈕 */
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0095DD;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #restartButton:hover {
+            background-color: #007bb5;
+        }
     </style>
 </head>
 <body>
 <canvas id="gameCanvas" width="400" height="300"></canvas>
+<button id="restartButton">Restart Game</button>
 
 <script>
 // JavaScript 代碼開始
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const restartButton = document.getElementById('restartButton');
 
 // 設置遊戲變量
 const brickWidth = 20; // 磚塊寬度
@@ -184,13 +199,12 @@ function draw() {
         ctx.fillStyle = '#FFFFFF';
         
         if (score === bricks.flat().length) { // 檢查是否擊中所有磚塊
-            ctx.fillText("You're good", canvas.width / 2 - 70, canvas.height / 2);
+            ctx.fillText("有啲料到", canvas.width / 2 - 70, canvas.height / 2);
         } else { 
-            ctx.fillText("Retry!", canvas.width / 2 - 70, canvas.height / 2);
+            ctx.fillText("無鬼用", canvas.width / 2 - 70, canvas.height / 2);
         }
-        
-        ctx.font = '20px Arial';
-        ctx.fillText('Press R to Restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
+
+        restartButton.style.display = 'block'; // 顯示重啟按鈕
     }
 }
 
@@ -243,8 +257,13 @@ function restartGame() {
     
     resetBall(); // 重置球的位置
 
+    restartButton.style.display = 'none'; // 隱藏重啟按鈕
+
     draw(); // 開始遊戲循環
 }
+
+// 為重啟按鈕添加事件監聽器
+restartButton.addEventListener('click', restartGame);
 
 createBricks(); // 創建磚塊
 draw(); // 開始遊戲循環
