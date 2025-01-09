@@ -5,10 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alleyway Game</title>
     <style>
+        body {
+            display: flex;
+            justify-content: center; /* 垂直居中 */
+            align-items: center; /* 水平居中 */
+            height: 100vh; /* 占滿整個視窗高度 */
+            margin: 0;
+            background-color: #000; /* 背景顏色 */
+        }
         canvas {
             border: 1px solid black;
-            display: block;
-            margin: 0 auto;
+            max-width: 100%; /* 最大寬度為 100% */
+            height: auto; /* 高度自動調整 */
         }
         #restartButton {
             display: none; /* 初始隱藏按鈕 */
@@ -196,7 +204,7 @@ function draw() {
         requestAnimationFrame(draw); // 繼續遊戲循環
     } else {
         ctx.font = '30px Arial';
-        ctx.fillStyle = '#FFFFFF';
+        ctx.fillStyle = 'red'; // 設置字體顏色為紅色
         
         if (score === bricks.flat().length) { // 檢查是否擊中所有磚塊
             ctx.fillText("識啲野", canvas.width / 2 - 70, canvas.height / 2);
@@ -237,12 +245,16 @@ canvas.addEventListener('touchmove', (e) => {
 
    if (touchX >= paddleWidth / 2 && touchX <= canvas.width - paddleWidth / 2) { 
        paddleX = touchX - paddleWidth / 2; 
-       
-       if (paddleX < 0) { 
-           paddleX = 0; 
-       } else if (paddleX + paddleWidth > canvas.width) { 
-           paddleX = canvas.width - paddleWidth; 
-       }
+   } else if (touchX < paddleWidth / 2) { 
+       paddleX = touchWidth /2 ; // 如果點擊在左側，將球拍移到最左側 
+   } else { 
+       paddleX=canvas.width-paddleWidth/2 ;// 如果點擊在右側，將球拍移到最右側 
+   }
+
+   if (paddleX <0){ 
+       paddleX=0 ;// 防止超出邊界 
+   }else if(paddleX+paddleWidth>canvas.width){ 
+       paddleX=canvas.width-paddleWidth ;// 防止超出邊界 
    }
 });
 
