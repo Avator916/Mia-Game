@@ -1,1215 +1,238 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=big5">
-<meta name=Generator content="Microsoft Word 15 (filtered)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:新細明體;
-	panose-1:2 2 5 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Garamond;
-	panose-1:2 2 4 4 3 3 1 1 8 3;}
-@font-face
-	{font-family:"\@新細明體";
-	panose-1:2 1 6 1 0 1 1 1 1 1;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	font-size:12.0pt;
-	font-family:"Garamond",serif;}
-.MsoChpDefault
-	{font-size:10.0pt;}
- /* Page Definitions */
- @page WordSection1
-	{size:595.3pt 841.9pt;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	layout-grid:18.0pt;}
-div.WordSection1
-	{page:WordSection1;}
--->
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alleyway Game</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
-
-<body lang=EN-HK style='word-wrap:break-word;text-justify-trim:punctuation'>
-
-<div class=WordSection1 style='layout-grid:18.0pt'>
-
-<p class=MsoNormal><a name="_GoBack"></a><span lang=EN-US>&lt;!DOCTYPE html&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;html lang=&quot;en&quot;&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;head&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &lt;meta
-charset=&quot;UTF-8&quot;&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &lt;meta
-name=&quot;viewport&quot; content=&quot;width=device-width,
-initial-scale=1.0&quot;&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &lt;title&gt;Alleyway
-Game&lt;/title&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &lt;style&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-canvas {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-border: 1px solid black;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-display: block;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-margin: 0 auto;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &lt;/style&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;/head&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;body&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;canvas id=&quot;gameCanvas&quot;
-width=&quot;400&quot; height=&quot;300&quot;&gt;&lt;/canvas&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;script&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const canvas =
-document.getElementById('gameCanvas');</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const ctx =
-canvas.getContext('2d');</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>設置遊戲變量</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const brickWidth = 20;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>磚塊寬度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const brickHeight = 10;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>磚塊高度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const brickPadding = 5;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>磚塊間距</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const brickOffsetTop =
-30; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>磚塊上邊距</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const brickOffsetLeft =
-30; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>磚塊左邊距</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let bricks = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let score = 0;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let lives = 3;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let gameOver = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>創建形狀為</span><span lang=EN-US>
-&quot;MIA&quot; </span><span lang=ZH-TW style='font-family:"新細明體",serif'>的磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function createBricks()
-{</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-bricks = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const rows = [</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;M&nbsp;&nbsp; M&nbsp; 1&nbsp;&nbsp; 1&quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;MM MM&nbsp; 1&nbsp; 1 1&quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;M M M&nbsp; 1 1 1 1&quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;M&nbsp;&nbsp; M&nbsp; 1 1&nbsp;&nbsp; 1&quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-for (let r = 0; r &lt; rows.length; r++) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const row = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-for (let c = 0; c &lt; rows[r].length; c++) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (rows[r][c] !== &quot; &quot;) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.push({</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-x: c * (brickWidth + brickPadding) + brickOffsetLeft,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-y: r * (brickHeight + brickPadding) + brickOffsetTop,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-visible: true,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-bricks.push(row);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; createBricks();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let paddleWidth = 100;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let paddleHeight = 10;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let paddleX =
-(canvas.width - paddleWidth) / 2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let ballRadius = 10;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let ballX = canvas.width
-/ 2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let ballY =
-canvas.height - 30;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>設置球的速度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let dx = 6; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>水平速度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; let dy = -6; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>垂直速度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function drawPaddle() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function drawBall() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function drawBricks() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-bricks.forEach((row) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.forEach((brick) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (brick.visible) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.rect(brick.x, brick.y, brickWidth, brickHeight);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function
-collisionDetection() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-bricks.forEach((row) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.forEach((brick) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (brick.visible) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballX + ballRadius &gt; brick.x &amp;&amp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballX - ballRadius &lt; brick.x + brickWidth &amp;&amp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY + ballRadius &gt; brick.y &amp;&amp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY - ballRadius &lt; brick.y + brickHeight</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dy
-= -dy; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>改變球的方向</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-brick.visible = false; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>隱藏磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-score++; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>增加分數</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>確保球不會穿透磚塊，將球移到磚塊的邊緣</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ballY + ballRadius &gt; brick.y &amp;&amp; ballY - ballRadius &lt; brick.y
-+ brickHeight) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ballY &lt; brick.y + (brickHeight / 2)) { // </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>球從上面碰撞</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY = brick.y - ballRadius;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else { // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>球從下面碰撞</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY = brick.y + brickHeight + ballRadius;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>檢查是否所有磚塊都被擊中</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (bricks.every(row =&gt; row.every(brick =&gt; !brick.visible))) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-gameOver = true; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>所有磚塊被擊中，遊戲結束</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function drawScore() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.font = '16px Arial';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#FFFFFF';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;ctx.fillText('Score:
-' + score, 8, 20);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function drawBoundary()
-{</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.rect(0, 0, canvas.width, canvas.height);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.strokeStyle = 'black';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.stroke();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function draw() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.clearRect(0, 0, canvas.width, canvas.height);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-drawBoundary(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製邊界</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-drawBricks(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-collisionDetection(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>碰撞檢測</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-drawPaddle(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製球拍</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-drawBall(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製球</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-drawScore(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製分數</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballX += dx; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>移動球</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY += dy;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ballX + dx &gt; canvas.width - ballRadius || ballX + dx &lt; ballRadius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-dx = -dx; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>球與牆壁碰撞</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ballY + dy &lt; ballRadius || (ballY + dy &gt; canvas.height - ballRadius
-&amp;&amp; ballX &gt; paddleX &amp;&amp; ballX &lt; paddleX + paddleWidth)) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-dy = -dy; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>球與上方或球拍碰撞</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else if (ballY + dy &gt; canvas.height - ballRadius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-lives--; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>減少生命值</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (!lives) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-gameOver = true; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>遊戲結束</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else { </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-resetBall(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>重置球的位置</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (!gameOver) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-requestAnimationFrame(draw); // </span><span lang=ZH-TW style='font-family:
-"新細明體",serif'>繼續遊戲循環</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.font = '30px Arial';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#FFFFFF';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (score === bricks.flat().length) { // </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>檢查是否擊中所有磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.fillText(&quot;</span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>好勁呀</span><span lang=EN-US>&quot;,
-canvas.width / 2 - 70, canvas.height / 2);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else { </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillText(&quot;</span><span lang=ZH-TW style='font-family:"新細明體",serif'>再來過</span><span
-lang=EN-US>&quot;, canvas.width / 2 - 70, canvas.height / 2);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.font = '20px Arial';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillText('Press R to Restart', canvas.width / 2 - 90, canvas.height / 2 +
-30);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function resetBall() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballX = canvas.width / 2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ballY = canvas.height - 30;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-dx = Math.random() &gt; 0.5 ? dx : -dx; // </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>隨機方向重置水平速度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-dy = -6; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>重置垂直速度</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;
-document.addEventListener('mousemove', (e) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const mouseX = e.clientX - canvas.getBoundingClientRect().left; // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>獲取滑鼠的</span><span lang=EN-US> X </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>坐標</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (mouseX &gt;= paddleWidth / 2 &amp;&amp; mouseX &lt;= canvas.width -
-paddleWidth / 2) { </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-paddleX = mouseX - paddleWidth / 2; // </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>更新球拍位置以跟隨滑鼠移動</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (paddleX &lt; 0) { </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-paddleX = 0; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else if (paddleX + paddleWidth &gt; canvas.width) { </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-paddleX = canvas.width - paddleWidth; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; });</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; function restartGame() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-gameOver = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-score = 0;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-lives = 3; // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>重置生命值</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;createBricks();
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>重建磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-resetBall(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>重置球的位置</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-draw(); // </span><span lang=ZH-TW style='font-family:"新細明體",serif'>開始遊戲循環</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; createBricks(); // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>創建磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; draw(); // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>開始遊戲循環</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;/script&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;/body&gt;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&lt;/html&gt;</span></p>
-
-</div>
+<body>
+<canvas id="gameCanvas" width="400" height="300"></canvas>
+
+<script>
+// JavaScript 代碼開始
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// 設置遊戲變量
+const brickWidth = 20; // 磚塊寬度
+const brickHeight = 10; // 磚塊高度
+const brickPadding = 5; // 磚塊間距
+const brickOffsetTop = 30; // 磚塊上邊距
+const brickOffsetLeft = 30; // 磚塊左邊距
+
+let bricks = [];
+let score = 0;
+let lives = 3;
+let gameOver = false;
+
+// 創建形狀為 "MIA" 的磚塊
+function createBricks() {
+    bricks = [];
+    const rows = [
+        "M   M  1   1",
+        "MM MM  1  1 1",
+        "M M M  1 1 1 1",
+        "M   M  1 1   1",
+    ];
+    for (let r = 0; r < rows.length; r++) {
+        const row = [];
+        for (let c = 0; c < rows[r].length; c++) {
+            if (rows[r][c] !== " ") {
+                row.push({
+                    x: c * (brickWidth + brickPadding) + brickOffsetLeft,
+                    y: r * (brickHeight + brickPadding) + brickOffsetTop,
+                    visible: true,
+                });
+            }
+        }
+        bricks.push(row);
+    }
+}
+
+createBricks();
+
+let paddleWidth = 100;
+let paddleHeight = 10;
+let paddleX = (canvas.width - paddleWidth) / 2;
+let ballRadius = 10;
+let ballX = canvas.width / 2;
+let ballY = canvas.height - 30;
+
+// 設置球的速度
+let dx = 6; // 水平速度
+let dy = -6; // 垂直速度
+
+function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = '#0095DD';
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = '#0095DD';
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawBricks() {
+    bricks.forEach((row) => {
+        row.forEach((brick) => {
+            if (brick.visible) {
+                ctx.beginPath();
+                ctx.rect(brick.x, brick.y, brickWidth, brickHeight);
+                ctx.fillStyle = '#0095DD';
+                ctx.fill();
+                ctx.closePath();
+            }
+        });
+    });
+}
+
+function collisionDetection() {
+    bricks.forEach((row) => {
+        row.forEach((brick) => {
+            if (brick.visible) {
+                if (
+                    ballX + ballRadius > brick.x && 
+                    ballX - ballRadius < brick.x + brickWidth && 
+                    ballY + ballRadius > brick.y && 
+                    ballY - ballRadius < brick.y + brickHeight
+                ) {
+                    dy = -dy; // 改變球的方向
+                    brick.visible = false; // 隱藏磚塊
+                    score++; // 增加分數
+
+                    // 確保球不會穿透磚塊，將球移到磚塊的邊緣
+                    if (ballY + ballRadius > brick.y && ballY - ballRadius < brick.y + brickHeight) {
+                        if (ballY < brick.y + (brickHeight / 2)) { // 球從上面碰撞
+                            ballY = brick.y - ballRadius;
+                        } else { // 球從下面碰撞
+                            ballY = brick.y + brickHeight + ballRadius;
+                        }
+                    }
+                }
+            }
+        });
+    });
+    
+    // 檢查是否所有磚塊都被擊中
+    if (bricks.every(row => row.every(brick => !brick.visible))) {
+        gameOver = true; // 所有磚塊被擊中，遊戲結束
+    }
+}
+
+function drawScore() {
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText('Score: ' + score, 8, 20);
+    
+    ctx.fillText('Lives: ' + lives, canvas.width - 65, 20);
+}
+
+function drawBoundary() {
+    ctx.beginPath();
+    ctx.rect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+    ctx.closePath();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawBoundary(); // 繪製邊界
+    drawBricks(); // 繪製磚塊
+    collisionDetection(); // 碰撞檢測
+
+    drawPaddle(); // 繪製球拍
+    drawBall(); // 繪製球
+    drawScore(); // 繪製分數
+    
+    ballX += dx; // 移動球
+    ballY += dy;
+
+    if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
+        dx = -dx; // 球與牆壁碰撞
+    }
+    
+    if (ballY + dy < ballRadius || (ballY + dy > canvas.height - ballRadius && ballX > paddleX && ballX < paddleX + paddleWidth)) {
+        dy = -dy; // 球與上方或球拍碰撞
+    } else if (ballY + dy > canvas.height - ballRadius) {
+        lives--; // 減少生命值
+        if (!lives) {
+            gameOver = true; // 遊戲結束
+        } else { 
+            resetBall(); // 重置球的位置
+        }
+    }
+
+    if (!gameOver) {
+        requestAnimationFrame(draw); // 繼續遊戲循環
+    } else {
+        ctx.font = '30px Arial';
+        ctx.fillStyle = '#FFFFFF';
+        
+        if (score === bricks.flat().length) { // 檢查是否擊中所有磚塊
+            ctx.fillText("You're good", canvas.width / 2 - 70, canvas.height / 2);
+        } else { 
+            ctx.fillText("Retry!", canvas.width / 2 - 70, canvas.height / 2);
+        }
+        
+        ctx.font = '20px Arial';
+        ctx.fillText('Press R to Restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
+    }
+}
+
+function resetBall() {
+    ballX = canvas.width / 2;
+    ballY = canvas.height - 30;
+
+    dx = Math.random() > 0.5 ? dx : -dx; // 隨機方向重置水平速度
+}
+
+document.addEventListener('mousemove', (e) => {
+    const mouseX = e.clientX - canvas.getBoundingClientRect().left; // 獲取滑鼠的 X 坐標
+    
+    if (mouseX >= paddleWidth / 2 && mouseX <= canvas.width - paddleWidth / 2) { 
+        paddleX = mouseX - paddleWidth / 2; // 更新球拍位置以跟隨滑鼠移動
+        
+        if (paddleX < 0) { 
+            paddleX = 0; 
+        } else if (paddleX + paddleWidth > canvas.width) { 
+            paddleX = canvas.width - paddleWidth; 
+        }
+    }
+});
+
+function restartGame() {
+    gameOver = false;
+    
+    score = 0;
+    
+    lives = 3; // 重置生命值
+    
+    createBricks(); // 重建磚塊
+    
+    resetBall(); // 重置球的位置
+
+    draw(); // 開始遊戲循環
+}
+
+createBricks(); // 創建磚塊
+draw(); // 開始遊戲循環
+
+</script>
 
 </body>
-<html>
-
-<head>
-<meta http-equiv=Content-Type content="text/html; charset=big5">
-<meta name=Generator content="Microsoft Word 15 (filtered)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:新細明體;
-	panose-1:2 2 5 0 0 0 0 0 0 0;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Garamond;
-	panose-1:2 2 4 4 3 3 1 1 8 3;}
-@font-face
-	{font-family:"\@新細明體";
-	panose-1:2 1 6 1 0 1 1 1 1 1;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	font-size:12.0pt;
-	font-family:"Garamond",serif;}
-.MsoChpDefault
-	{font-size:10.0pt;}
- /* Page Definitions */
- @page WordSection1
-	{size:595.3pt 841.9pt;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	layout-grid:18.0pt;}
-div.WordSection1
-	{page:WordSection1;}
--->
-</style>
-
-</head>
-
-<body lang=EN-HK style='word-wrap:break-word;text-justify-trim:punctuation'>
-
-<div class=WordSection1 style='layout-grid:18.0pt'>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>獲取畫布元素和上下文</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const canvas =
-document.getElementById('gameCanvas');</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const ctx = canvas.getContext('2d');</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>設置遊戲變量</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const brickWidth = 75;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const brickHeight = 20;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const brickPadding = 10;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const brickOffsetTop = 30;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>const brickOffsetLeft = 30;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let bricks = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let score = 0;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let lives = 3;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let gameOver = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>創建形狀為</span><span lang=EN-US> &quot;MIA&quot; </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>的磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function createBricks() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; bricks = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; const rows = [</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot; M&nbsp;&nbsp; M &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot; MM MM &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot; M M M &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot; M&nbsp;&nbsp; M &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;&nbsp; AAA&nbsp; &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot; A&nbsp;&nbsp; A &quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;AAAAAAA&quot;,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; for (let r = 0; r &lt;
-rows.length; r++) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const row = [];</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-for (let c = 0; c &lt; rows[r].length; c++) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (rows[r][c] !== &quot; &quot;) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.push({</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-x: c * (brickWidth + brickPadding) + brickOffsetLeft,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-y: r * (brickHeight + brickPadding) + brickOffsetTop,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-visible: true,</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-bricks.push(row);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>createBricks();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let ball = { x: canvas.width / 2, y:
-canvas.height - 30, dx: 2, dy: -2, radius: 10 };</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let paddle = { x: (canvas.width - 75) / 2,
-width: 75, height: 10 };</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let rightPressed = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>let leftPressed = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>繪製磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function drawBricks() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; bricks.forEach((row)
-=&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.forEach((brick) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (brick.visible) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.rect(brick.x, brick.y, brickWidth, brickHeight);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; });</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>碰撞檢測</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function collisionDetection() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; bricks.forEach((row)
-=&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-row.forEach((brick) =&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (brick.visible) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ball.x &gt; brick.x &amp;&amp; ball.x &lt; brick.x + brickWidth &amp;&amp;
-ball.y &gt; brick.y &amp;&amp; ball.y &lt; brick.y + brickHeight) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ball.dy = -ball.dy;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-brick.visible = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-score++;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; });</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>遊戲結束檢查</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function gameOverCheck() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; if (ball.y + ball.dy
-&gt; canvas.height - ball.radius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-gameOver = true;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>重啟遊戲</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function restartGame() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ball.x = canvas.width /
-2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ball.y = canvas.height -
-30;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ball.dx = 2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ball.dy = -2;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; gameOver = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; createBricks(); // </span><span
-lang=ZH-TW style='font-family:"新細明體",serif'>重建磚塊</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>主遊戲循環</span></p>
-
-<p class=MsoNormal><span lang=EN-US>function draw() {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; ctx.clearRect(0, 0,
-canvas.width, canvas.height);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; drawBricks();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp; &nbsp;collisionDetection();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; if (!gameOver) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製球</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>繪製球拍</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.beginPath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.rect(paddle.x, canvas.height - paddle.height, paddle.width, paddle.height);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#0095DD';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fill();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.closePath();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>移動球</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ball.x += ball.dx;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;ball.y
-+= ball.dy;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>球與牆壁碰撞</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ball.x + ball.dx &gt; canvas.width - ball.radius || ball.x + ball.dx &lt;
-ball.radius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ball.dx = -ball.dx;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ball.y + ball.dy &lt; ball.radius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ball.dy = -ball.dy;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else if (ball.y + ball.dy &gt; canvas.height - ball.radius) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (ball.x &gt; paddle.x &amp;&amp; ball.x &lt; paddle.x + paddle.width) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ball.dy = -ball.dy;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-gameOverCheck();</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>球拍移動</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-if (rightPressed &amp;&amp; paddle.x &lt; canvas.width - paddle.width) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-paddle.x += 7;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-} else if (leftPressed &amp;&amp; paddle.x &gt; 0) {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-paddle.x -= 7;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-requestAnimationFrame(draw);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; } else {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>遊戲結束文字</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.font = '30px Arial';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillStyle = '#FFFFFF';</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-ctx.fillText('Game Over', canvas.width / 2 - 70, canvas.height / 2);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// </span><span lang=ZH-TW style='font-family:"新細明體",serif'>延遲後重啟遊戲</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-setTimeout(restartGame, 2000);</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>}</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>鍵盤事件監聽器</span></p>
-
-<p class=MsoNormal><span lang=EN-US>document.addEventListener('keydown', (e)
-=&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; if (e.key === 'Right' ||
-e.key === 'ArrowRight') {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-rightPressed = true;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; } else if (e.key ===
-'Left' || e.key === 'ArrowLeft') {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-leftPressed = true;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>document.addEventListener('keyup', (e)
-=&gt; {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; if (e.key === 'Right' ||
-e.key === 'ArrowRight') {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-rightPressed = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; } else if (e.key ===
-'Left' || e.key === 'ArrowLeft') {</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-leftPressed = false;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp; }</span></p>
-
-<p class=MsoNormal><span lang=EN-US>});</span></p>
-
-<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
-
-<p class=MsoNormal><span lang=EN-US>// </span><span lang=ZH-TW
-style='font-family:"新細明體",serif'>開始遊戲循環</span></p>
-
-<p class=MsoNormal><span lang=EN-US>draw();</span></p>
-
-</div>
-
-</body>
-
-</html>
 </html>
