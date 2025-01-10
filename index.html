@@ -7,6 +7,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center; /* 垂直居中 */
             align-items: center; /* 水平居中 */
             height: 100vh; /* 占滿整個視窗高度 */
@@ -18,8 +19,7 @@
             max-width: 100%; /* 最大寬度為 100% */
             height: auto; /* 高度自動調整 */
         }
-        #restartButton {
-            display: none; /* 初始隱藏按鈕 */
+        button {
             margin: 20px auto;
             padding: 10px 20px;
             font-size: 16px;
@@ -28,13 +28,14 @@
             border: none;
             cursor: pointer;
         }
-        #restartButton:hover {
+        button:hover {
             background-color: #007bb5;
         }
     </style>
 </head>
 <body>
 <canvas id="gameCanvas" width="400" height="300"></canvas>
+<button id="startButton">Start Game</button>
 <button id="restartButton">Restart Game</button>
 
 <script>
@@ -42,6 +43,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const restartButton = document.getElementById('restartButton');
+const startButton = document.getElementById('startButton');
 
 // 設置遊戲變量
 const brickWidth = 20; // 磚塊寬度
@@ -78,8 +80,6 @@ function createBricks() {
         bricks.push(row);
     }
 }
-
-createBricks();
 
 let paddleWidth = 100;
 let paddleHeight = 10;
@@ -223,32 +223,45 @@ function resetBall() {
     dx = Math.random() > 0.5 ? dx : -dx; // 隨機方向重置水平速度
 }
 
-document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX - canvas.getBoundingClientRect().left; // 獲取滑鼠的 X 坐標
-    
-    if (mouseX >= paddleWidth / 2 && mouseX <= canvas.width - paddleWidth / 2) { 
-        paddleX = mouseX - paddleWidth / 2; // 更新球拍位置以跟隨滑鼠移動
-        
-        if (paddleX < 0) { 
-            paddleX = 0; 
-        } else if (paddleX + paddleWidth > canvas.width) { 
-            paddleX = canvas.width - paddleWidth; 
-        }
-    }
+// 開始遊戲功能
+function startGame() {
+   startButton.style.display = 'none'; // 隱藏開始按鈕
+
+   gameOver = false; 
+   score = 0; 
+   lives = 3;
+
+   createBricks(); 
+   resetBall(); 
+
+   draw(); // 開始遊戲循環
+}
+
+// 傾斜控制功能
+window.addEventListener('deviceorientation', function(event) {
+   const tiltLR = event.gamma; // 左右傾斜度
+
+   const maxPaddleX = canvas.width - paddleWidth;
+
+   if (tiltLR > 15 && paddleX < maxPaddleX) { 
+       paddleX += dx * (tiltLR / window.innerWidth); // 向右移動球拍，根據傾斜程度調整速度
+   } else if (tiltLR < -15 && paddleX > 0) { 
+       paddleX -= dx * (-tiltLR / window.innerWidth); // 向左移動球拍，根據傾斜程度調整速度
+   }
 });
 
 // 支持觸控屏控制（如手機）
 canvas.addEventListener('touchmove', (e) => {
-   e.preventDefault(); // 防止滾動頁面
+   e.preventDefault(); 
 
    const touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
 
    if (touchX >= paddleWidth / 2 && touchX <= canvas.width - paddleWidth / 2) { 
        paddleX = touchX - paddleWidth / 2; 
    } else if (touchX < paddleWidth / 2) { 
-       paddleX = touchWidth /2 ; // 如果點擊在左側，將球拍移到最左側 
+       paddleX=0 ;// 如果點擊在左側，將球拍移到最左側 
    } else { 
-       paddleX=canvas.width-paddleWidth/2 ;// 如果點擊在右側，將球拍移到最右側 
+       paddleX=canvas.width-paddleWidth ;// 如果點擊在右側，將球拍移到最右側 
    }
 
    if (paddleX <0){ 
@@ -263,22 +276,23 @@ function restartGame() {
     
     score = 0;
     
-    lives = 3; // 重置生命值
+    lives = 3; 
     
-    createBricks(); // 重建磚塊
+    createBricks(); 
     
-    resetBall(); // 重置球的位置
+    resetBall(); 
 
-    restartButton.style.display = 'none'; // 隱藏重啟按鈕
+    restartButton.style.display = 'none'; 
 
-    draw(); // 開始遊戲循環
+    draw(); 
 }
 
-// 為重啟按鈕添加事件監聽器
+// 為重啟按鈕和開始按鈕添加事件監聽器
 restartButton.addEventListener('click', restartGame);
+startButton.addEventListener('click', startGame);
 
-createBricks(); // 創建磚塊
-draw(); // 開始遊戲循環
+// 顯示開始按鈕以啟動遊戲流程
+startButton.style.display = 'block';
 
 </script>
 
