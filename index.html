@@ -31,13 +31,20 @@
         button:hover {
             background-color: #007bb5;
         }
+        #joystick {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
     </style>
 </head>
 <body>
 <canvas id="gameCanvas" width="400" height="300"></canvas>
 <button id="startButton">Start Game</button>
 <button id="restartButton">Restart Game</button>
+<div id="joystick"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.8.0/nipplejs.min.js"></script>
 <script>
 // JavaScript 代碼開始
 const canvas = document.getElementById('gameCanvas');
@@ -57,6 +64,7 @@ let score = 0;
 let lives = 3;
 let gameOver = false;
 
+// 創建形狀為 "MIA" 的磚塊
 function createBricks() {
     bricks = [];
     const rows = [
@@ -135,9 +143,9 @@ function collisionDetection() {
                     score++; // 增加分數
 
                     if (ballY + ballRadius > brick.y && ballY - ballRadius < brick.y + brickHeight) {
-                        if (ballY < brick.y + (brickHeight / 2)) { 
+                        if (ballY < brick.y + (brickHeight / 2)) { // 球從上面碰撞
                             ballY = brick.y - ballRadius;
-                        } else { 
+                        } else { // 球從下面碰撞
                             ballY = brick.y + brickHeight + ballRadius;
                         }
                     }
@@ -146,8 +154,9 @@ function collisionDetection() {
         });
     });
     
+    // 檢查是否所有磚塊都被擊中
     if (bricks.every(row => row.every(brick => !brick.visible))) {
-        gameOver = true; 
+        gameOver = true; // 所有磚塊被擊中，遊戲結束
     }
 }
 
@@ -170,59 +179,58 @@ function drawBoundary() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawBoundary(); 
-    drawBricks(); 
-    collisionDetection(); 
+    drawBoundary(); // 繪製邊界
+    drawBricks(); // 繪製磚塊
+    collisionDetection(); // 碰撞檢測
 
-    drawPaddle(); 
-    drawBall(); 
-    drawScore(); 
+    drawPaddle(); // 繪製球拍
+    drawBall(); // 繪製球
+    drawScore(); // 繪製分數
     
-    ballX += dx; 
+    ballX += dx; // 移動球
     ballY += dy;
 
     if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
-        dx = -dx; 
+        dx = -dx; // 球與牆壁碰撞
     }
     
     if (ballY + dy < ballRadius || (ballY + dy > canvas.height - ballRadius && ballX > paddleX && ballX < paddleX + paddleWidth)) {
-        dy = -dy; 
+        dy = -dy; // 球與上方或球拍碰撞
     } else if (ballY + dy > canvas.height - ballRadius) {
-        lives--; 
+        lives--; // 減少生命值
         if (!lives) {
-            gameOver = true; 
+            gameOver = true; // 遊戲結束
         } else { 
-            resetBall(); 
+            resetBall(); // 重置球的位置
         }
     }
 
     if (!gameOver) {
-        requestAnimationFrame(draw); 
+        requestAnimationFrame(draw); // 繼續遊戲循環
     } else {
         ctx.font = '30px Arial';
-        ctx.fillStyle = 'red'; 
+        ctx.fillStyle = 'red'; // 設置字體顏色為紅色
         
-        if (score === bricks.flat().length) { 
+        if (score === bricks.flat().length) { // 檢查是否擊中所有磚塊
             ctx.fillText("識啲野", canvas.width / 2 - 70, canvas.height / 2);
         } else { 
             ctx.fillText("無用", canvas.width / 2 - 70, canvas.height / 2);
         }
 
-        restartButton.style.display = 'block'; 
+        restartButton.style.display = 'block'; // 顯示重啟按鈕
     }
 }
 
 function resetBall() {
-   // 將球的位置設置在球拍上方，避免一開始就輸掉遊戲
    ballX = canvas.width / 2;
-   ballY = canvas.height - paddleHeight - ballRadius - 5;
+   ballY = canvas.height - paddleHeight - ballRadius -5;
 
-   dx = Math.random() > 0.5 ? dx : -dx; 
+   dx = Math.random() > 0.5 ? dx : -dx; // 隨機方向重置水平速度
 }
 
 // 開始遊戲功能
 function startGame() {
-   startButton.style.display = 'none'; 
+   startButton.style.display = 'none'; // 隱藏開始按鈕
 
    gameOver = false; 
    score = 0; 
@@ -231,22 +239,59 @@ function startGame() {
    createBricks(); 
    resetBall(); 
 
-   draw(); 
+   setupJoystick(); // 設置搖桿
+
+   draw(); // 開始遊戲循環
 }
 
-// 添加鼠標移動事件處理程序
-function mouseMoveHandler(e) {
-   const rect = canvas.getBoundingClientRect(); // Get canvas bounds
-   const relativeX = e.clientX - rect.left; // Calculate relative X position
+// 初始化搖桿控制器
+let joystick;
 
-   // Update paddle position based on mouse movement
-   if (relativeX > 0 && relativeX < canvas.width) {
-       paddleX = relativeX - paddleWidth / 2; // Center the paddle under the cursor
+function setupJoystick() {
+   const joystickElement = document.getElementById('joystick');
+
+   joystick = nipplejs.create({
+       zone: joystickElement,
+       mode: 'static',
+       position: { left: '20%', bottom: '20%' },
+       color: 'black',
+       size: 100,
+       shape: 'circle',
+   });
+
+   joystick.on('move', (evt, data) => {
+       const { vector } = data;
+       if (vector) {
+           paddleX += vector.x * dx * (vector.force); // 調整速度因子以適應您的需求
+
+           // 確保球拍不會超出邊界
+           if (paddleX < 0) paddleX = 0;
+           else if (paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
+       }
+   });
+
+   joystick.on('end', () => {});
+}
+
+// 添加鼠標控制功能
+canvas.addEventListener('mousemove', function(e) {
+   const rect = canvas.getBoundingClientRect(); 
+   const mouseX = e.clientX - rect.left;
+
+   if (mouseX >= paddleWidth / 2 && mouseX <= canvas.width - paddleWidth / 2) { 
+       paddleX = mouseX - paddleWidth / 2; 
+   } else if (mouseX < paddleWidth / 2) { 
+       paddleX=0 ;// 如果點擊在左側，將球拍移到最左側 
+   } else { 
+       paddleX=canvas.width-paddleWidth ;// 如果點擊在右側，將球拍移到最右側 
    }
-}
 
-// Add event listener for pointer movement
-canvas.addEventListener('pointermove', mouseMoveHandler, false);
+   if (paddleX <0){ 
+       paddleX=0 ;// 防止超出邊界 
+   }else if(paddleX+paddleWidth>canvas.width){ 
+       paddleX=canvas.width-paddleWidth ;// 防止超出邊界 
+   }
+});
 
 // 支持觸控屏控制（如手機）
 canvas.addEventListener('touchmove', (e) => {
@@ -271,9 +316,9 @@ canvas.addEventListener('touchmove', (e) => {
 
 function restartGame() {
    gameOver = false;
-   
+
    score = 0;
-   
+
    lives = 3; 
     
    createBricks(); 
