@@ -35,6 +35,7 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
+            z-index: 10; /* 確保搖桿在最上層 */
         }
     </style>
 </head>
@@ -154,7 +155,6 @@ function collisionDetection() {
         });
     });
     
-    // 檢查是否所有磚塊都被擊中
     if (bricks.every(row => row.every(brick => !brick.visible))) {
         gameOver = true; // 所有磚塊被擊中，遊戲結束
     }
@@ -209,7 +209,7 @@ function draw() {
         requestAnimationFrame(draw); // 繼續遊戲循環
     } else {
         ctx.font = '30px Arial';
-        ctx.fillStyle = 'red'; // 設置字體顏色為紅色
+        ctx.fillStyle = 'red'; 
         
         if (score === bricks.flat().length) { // 檢查是否擊中所有磚塊
             ctx.fillText("識啲野", canvas.width / 2 - 70, canvas.height / 2);
@@ -262,9 +262,8 @@ function setupJoystick() {
    joystick.on('move', (evt, data) => {
        const { vector } = data;
        if (vector) {
-           paddleX += vector.x * dx * (vector.force); // 調整速度因子以適應您的需求
+           paddleX += vector.x * dx * (vector.force); 
 
-           // 確保球拍不會超出邊界
            if (paddleX < 0) paddleX = 0;
            else if (paddleX + paddleWidth > canvas.width) paddleX = canvas.width - paddleWidth;
        }
